@@ -1,3 +1,6 @@
+'''
+mypy test framework
+'''
 import math
 import time
 
@@ -5,11 +8,6 @@ import time
 import d3d11
 import d3d11x
 from d3d11c import *
-
-import context
-
-context.inst.build()
-context.inst.window.show(SW_SHOW)
 
 #Our vertex layout description: position (x, y, z) and color (r, g, b, a).
 #See the "Layouts and input layouts" article in the documentation.
@@ -30,65 +28,54 @@ triangle = [
     (5, 0, 0)  + (0, 0, 1, 1), #Blue vertex.
 ]
 
-#Effect for rendering. The file contains trivial vertex- and pixel-shader.
-effect = d3d11.Effect(d3d11x.getResourceDir("Effects", "Tutorial2.fx"))
 
-#Input layout for the effect. Valid when technique index == 0 and it's pass index == 0 or
-#the pass's input signature is compatible with that combination.
-inputLayout = d3d11.InputLayout(vertexDesc, effect, 0, 0)
+class App(d3d11x.Frame):
+	def onCreate(self):
+		self.camera = d3d11x.Camera()
+		effectPath = d3d11x.getResourceDir("Effects", "Tutorial2.fx")
+		print effectPath
+		self.effect = d3d11.Effect(effectPath)
+		#Input layout for the effect. Valid when technique index == 0 and it's pass index == 0 or
+		#the pass's input signature is compatible with that combination.
+		self.inputLayout = d3d11.InputLayout(vertexDesc, self.effect, 0, 0)
+		#Create a hardware buffer to hold our triangle.
+		self.vertexBuffer = d3d11.Buffer(vertexDesc, triangle, BIND_VERTEX_BUFFER, USAGE_DYNAMIC, CPU_ACCESS_WRITE)
+		pass
 
-#Create a hardware buffer to hold our triangle.
-vertexBuffer = d3d11.Buffer(vertexDesc, triangle, BIND_VERTEX_BUFFER)
+	def onUpdate(self):
+		self.camera.onUpdate(self.frameTime)
 
-#Precalculate view matrix. Eye position is (0, 5, -15) and it is looking at (0, 5, 0). (0, 1, 0) points up.
-viewMatrix = d3d11.Matrix()
-viewMatrix.lookAt((0, 5, -15), (0, 5, 0), (0, 1, 0))
+	def onMessage(self, event):
+		return self.camera.onMessage(event)
 
-def mainloop():
-    window = context.inst.window
-    device = context.inst.device
-    while 1:
-        #Check all new messages.
-        for msg in window.getMessages():
-            if msg.code == WM_DESTROY:
-                #Close the application.
-                return
+	def onRender(self):
+		viewMatrix = self.camera.getViewMatrix()
+		projMatrix = self.createProjection(60, 0.1, 200)
 
-        #Set default render targets.
-        device.setRenderTargetsDefault()
+		#Set vertex buffer, input layout and topology.
+		self.device.setVertexBuffers([self.vertexBuffer])
+		self.device.setInputLayout(self.inputLayout)
+		self.device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 
-        #Set vertex buffer, input layout and topology.
-        device.setVertexBuffers([vertexBuffer])
-        device.setInputLayout(inputLayout)
-        device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+		#The world matrix. Rotate the triangle (in radians) based
+		#on the value returned by clock().
+		yRot = time.clock()
+		worldMatrix = d3d11.Matrix()
+		worldMatrix.rotate((0, yRot, 0))
 
-        #Projection matrix.
-        screenDesc = device.getScreenDesc()
-        fieldOfView = math.radians(60.0) #60 degrees.
-        aspectRatio = float(screenDesc.width) / screenDesc.height
-        projMatrix = d3d11.Matrix()
-        projMatrix.perspectiveFov(fieldOfView, aspectRatio, 0.1, 100.0)
+		#Combine matrices into one matrix by multiplying them.
+		wordViewProj = worldMatrix * viewMatrix * projMatrix
 
-        #The world matrix. Rotate the triangle (in radians) based
-        #on the value returned by clock().
-        yRot = time.clock()
-        worldMatrix = d3d11.Matrix()
-        worldMatrix.rotate((0, yRot, 0))
+		#Update effect variable(s).
+		self.effect.set("worldViewProjection", wordViewProj)
+		#Apply technique number 0 and it's pass 0.
+		self.effect.apply(0, 0)
 
-        #Combine matrices into one matrix by multiplying them.
-        wordViewProj = worldMatrix * viewMatrix * projMatrix
+		#Draw all three vertices using the currently bound vertex buffer
+		#and other settings (Effect, input layout, topology etc.).
+		self.device.draw(len(self.vertexBuffer), 0)
 
-        #Update effect variable(s).
-        effect.set("worldViewProjection", wordViewProj)
-        #Apply technique number 0 and it's pass 0.
-        effect.apply(0, 0)
 
-        #Draw all three vertices using the currently bound vertex buffer
-        #and other settings (Effect, input layout, topology etc.).
-        device.draw(len(vertexBuffer), 0)
-
-        #Present our rendering. Wait for vsync.
-        device.present(1)
-
-#Start the mainloop.
-mainloop()
+if __name__ == "__main__":
+	app = App('mypy', __doc__)
+	app.mainloop()
