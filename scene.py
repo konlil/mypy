@@ -24,8 +24,9 @@ class FbxScene(Scene):
 		if not lResult:
 			print("An error occurred while loading scene: %s"%self.res)
 			return
-
-		self.desc = SceneDesc('assets/box_only.desc')
+		descPath = '%s.desc'%(self.res[:-4])
+		print descPath
+		self.desc = SceneDesc(descPath)
 
 		self.loadHierarchy(lScene)
 

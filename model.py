@@ -71,6 +71,8 @@ class FbxModel(Model):
 		self.effect = d3d11.Effect(effectPath)
 		self.vertexDesc = self.desc.vtdesc
 
+		print self.desc.effect, self.vertexDesc
+		print self.effect
 		#Input layout for the effect. Valid when technique index == 0 and it's pass index == 0 or
 		#the pass's input signature is compatible with that combination.
 		self.inputLayout = d3d11.InputLayout(self.vertexDesc, self.effect, 0, 0)
@@ -86,13 +88,28 @@ class FbxModel(Model):
 		controlPoints = lMesh.GetControlPoints()
 		indexCount = lMesh.GetPolygonVertexCount()
 		indexData = lMesh.GetPolygonVertices()
+		leNormals = lMesh.GetLayer(0).GetNormals()
 
 		self.vertexData = []
 		for i in xrange(indexCount):
 			index = indexData[i]
 			position = controlPoints[index]
-			self.vertexData.append((position[0], position[1], position[2], 1, 1, 1, 1))
-			print index, position
+			normal = (0, 0, 0)
+			if leNormals:
+				if leNormals.GetMappingMode() == FbxLayerElement.eByPolygonVertex:
+					if leNormals.GetReferenceMode() == FbxLayerElement.eDirect:
+						normal = leNormals.GetDirectArray().GetAt(i)
+			color = (1, 1, 1, 1)
+			vertexDef = []
+			for v in self.desc.vtdesc:
+				if v[0] == 'POSITION':
+					vertexDef += list(position)
+				elif v[0] == 'NORMAL':
+					vertexDef += list(normal)
+				elif v[0] == 'COLOR':
+					vertexDef += list(color)
+			self.vertexData.append(vertexDef)
+			print index, vertexDef 
 		self.indexData = [(int(i),) for i in indexData]
 		self.indexCount = indexCount
 
@@ -127,8 +144,16 @@ class FbxModel(Model):
 		#Update effect variable(s).
 		if "WVPMatrix" in effectVarsDesc:
 			self.effect.set("WVPMatrix", wordViewProj)
-		# if "worldMatrix" in effectVarsDesc:
-		# 	self.effect.set("worldMatrix", worldMatrix)
+		if "worldMatrix" in effectVarsDesc:
+			self.effect.set("worldMatrix", worldMatrix)
+		if "cameraPos" in effectVarsDesc:
+			self.effect.set("cameraPos", d3d11x.Camera().pos)
+
+		for var_key in effectVarsDesc:
+			var = getattr(self.desc, var_key, None)
+			if var:
+				self.effect.set(var_key, var)
+
 		# self.effect.set("vEye", d3d11x.Camera().pos)
 		# self.effect.set("vLightDirection", [1, 0, 0, 1.0])
 		# # self.effect.set("lightPos", [1, 4, 1.5, 0])
