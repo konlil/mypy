@@ -3,7 +3,7 @@
 cbuffer defaultBuffer  
 {
     //Combined world-, view- and projection-matrix.
-    float4x4 WVPMatrix;
+    float4x4 worldViewProjection;
 }
 
 //Our input vertex for the vertex shader.
@@ -23,7 +23,7 @@ PS_INPUT VSSimple(VS_INPUT input)
 {
     PS_INPUT output;
     //Transform our world-space vertex into screen space.
-    output.pos = mul(input.pos, WVPMatrix);
+    output.pos = mul(input.pos, worldViewProjection);
     //Copy vertex color through for the pixel shader.
     output.color = input.color;
     return output;    
@@ -33,8 +33,7 @@ PS_INPUT VSSimple(VS_INPUT input)
 //means the color will go to the render target at index 0.
 float4 PSSimple(PS_INPUT input) : SV_Target
 { 
-    //return input.color;
-    return float4(1.0f, 0.3f, 0.7f, 1.0f);
+    return input.color;
 }
 
 //Disable culling.
@@ -51,3 +50,4 @@ technique11 Render {
         SetRasterizerState(RSNoCull);
     }
 }
+

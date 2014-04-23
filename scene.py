@@ -4,6 +4,7 @@ import d3d11x
 from d3d11c import *
 
 import model
+from scene_desc import SceneDesc
 
 class Scene(object):
 	def __init__(self, path):
@@ -24,6 +25,8 @@ class FbxScene(Scene):
 			print("An error occurred while loading scene: %s"%self.res)
 			return
 
+		self.desc = SceneDesc('assets/box_only.desc')
+
 		self.loadHierarchy(lScene)
 
 		lSdkManager.Destroy()
@@ -43,9 +46,10 @@ class FbxScene(Scene):
 		elif attrType == FbxNodeAttribute.eSkeleton:
 			pass
 		elif attrType == FbxNodeAttribute.eMesh:
-			m = model.FbxModel()
-			m.fromFbxNode(node)
+			m = model.FbxModel(node.GetName())
 			m.setWorld(self.getNodeWorldMatrix(node))
+			m.setDesc(self.desc.getNode(node.GetName()))
+			m.fromFbxNode(node)
 			self.models.append(m)
 		elif attrType == FbxNodeAttribute.eNurbs:
 			pass
@@ -73,5 +77,5 @@ class FbxScene(Scene):
 			m.render(device, view, proj)
 
 if __name__ == "__main__":
-	sc = FbxScene('export/test.fbx')
+	sc = FbxScene('3dsmax/export/box_only.fbx')
 	sc.load()

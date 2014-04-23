@@ -14,12 +14,12 @@ import scene
 #d3d11.enableDebug()
 
 class App(d3d11x.Frame):
-	def __init__(self, title, helpText='', debug=False):
-		super(App, self).__init__(title, helpText, debug)
+	def __init__(self, title, helpText=''):
+		super(App, self).__init__(title, helpText)
 
 	def onCreate(self):
 		self.camera = d3d11x.Camera()
-		self.scene = scene.FbxScene('export/tw_jflj_boli.fbx')
+		self.scene = scene.FbxScene('3dsmax/export/box_unit.fbx')
 		self.scene.load()
 
 	def onUpdate(self):
@@ -34,5 +34,5 @@ class App(d3d11x.Frame):
 		self.scene.render(self.device, viewMatrix, projMatrix)
 
 if __name__ == "__main__":
-	app = App('mypy', __doc__, False)
+	app = App('mypy', __doc__)
 	app.mainloop()

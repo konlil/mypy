@@ -1,0 +1,14 @@
+#coding: utf8
+
+data = {
+	
+	"Box001": {
+		"vtdesc": [
+			("POSITION",	"FORMAT_R32G32B32_FLOAT", "INPUT_PER_VERTEX_DATA"),
+			#("NORMAL",		"FORMAT_R32G32B32_FLOAT", "INPUT_PER_VERTEX_DATA"),
+			("COLOR",		"FORMAT_R32G32B32_FLOAT", "INPUT_PER_VERTEX_DATA"),
+		],
+
+		"effect": "effects/ambient_only.fx",
+	},
+}
