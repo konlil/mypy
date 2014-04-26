@@ -98,7 +98,12 @@ class FbxModel(Model):
 		indexData = lMesh.GetPolygonVertices()
 		leNormals = lMesh.GetLayer(0).GetNormals()
 
-		print indexData
+		print controlPointsCount, indexCount
+		for i in xrange(controlPointsCount):
+			print controlPoints[i]
+		print '--------------------------'
+
+		print len(indexData), indexData
 		self.vertexData = []
 		for i in xrange(indexCount):
 			index = indexData[i]

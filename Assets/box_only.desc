@@ -11,8 +11,8 @@ data = {
 
 		"effect": "effects/per_vertex_shading.fx",
 		'ambientColor': (1, 0, 0, 1),
-		'diffuseColor': (1, 1, 1, 1),
-		'specularColor': (0, 1, 0, 1),
-		'lightPos': (1, 4, 1.5, 0),
+		'diffuseColor': (0, 2, 0, 1),
+		'specularColor': (0, 0, 1, 1),
+		'lightPos': (0, 40, 0, 0),
 	},
 }
