@@ -80,6 +80,14 @@ class FbxModel(Model):
 	def setWorld(self, matrix):
 		self.world = matrix
 
+
+	def readVertex(self, mesh, polygonIdx):
+		controlPoints = mesh.GetControlPoints()
+		x = controlPoints[polygonIdx][0]
+		y = controlPoints[polygonIdx][1]
+		z = controlPoints[polygonIdx][2]
+		return (x, y, z)
+
 	def fromFbxNode(self, node):
 		lMesh = node.GetNodeAttribute()
 		print "load:", node.GetName()
@@ -90,6 +98,7 @@ class FbxModel(Model):
 		indexData = lMesh.GetPolygonVertices()
 		leNormals = lMesh.GetLayer(0).GetNormals()
 
+		print indexData
 		self.vertexData = []
 		for i in xrange(indexCount):
 			index = indexData[i]
@@ -109,7 +118,7 @@ class FbxModel(Model):
 				elif v[0] == 'COLOR':
 					vertexDef += list(color)
 			self.vertexData.append(vertexDef)
-			print index, vertexDef 
+			print index, vertexDef
 		self.indexData = [(int(i),) for i in indexData]
 		self.indexCount = indexCount
 
@@ -128,9 +137,9 @@ class FbxModel(Model):
 
 		#Set vertex buffer, input layout and topology.
 		device.setVertexBuffers([self.vertexBuffer])
-		device.setIndexBuffer(self.indexBuffer)
+		#device.setIndexBuffer(self.indexBuffer)
 		device.setInputLayout(self.inputLayout)
-		device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLESTRIP)
+		device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 
 		#The world matrix. Rotate the triangle (in radians) based
 		#on the value returned by clock().
@@ -165,8 +174,8 @@ class FbxModel(Model):
 
 		#Draw all three vertices using the currently bound vertex buffer
 		#and other settings (Effect, input layout, topology etc.).
-		# device.draw(len(self.vertexBuffer), 0)
-		device.drawIndexed(self.indexCount, 0, 0)
+		device.draw(len(self.vertexBuffer), 0)
+		#device.drawIndexed(self.indexCount, 0, 0)
 
 if __name__ == "__main__":
 	#m = NodefullModel()

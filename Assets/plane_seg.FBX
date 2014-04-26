@@ -12,9 +12,9 @@ FBXHeaderExtension:  {
 		Month: 4
 		Day: 26
 		Hour: 18
-		Minute: 15
-		Second: 33
-		Millisecond: 461
+		Minute: 10
+		Second: 12
+		Millisecond: 553
 	}
 	Creator: "FBX SDK/FBX Plugins version 2014.0.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -30,19 +30,19 @@ FBXHeaderExtension:  {
 			Comment: ""
 		}
 		Properties70:  {
-			P: "DocumentUrl", "KString", "Url", "", "C:\Users\jgyuan\Work\github\mypy\3dsmax\export\box_only.FBX"
-			P: "SrcDocumentUrl", "KString", "Url", "", "C:\Users\jgyuan\Work\github\mypy\3dsmax\export\box_only.FBX"
+			P: "DocumentUrl", "KString", "Url", "", "E:\Work\Github\mypy\3dsmax\export\plane_seg.FBX"
+			P: "SrcDocumentUrl", "KString", "Url", "", "E:\Work\Github\mypy\3dsmax\export\plane_seg.FBX"
 			P: "Original", "Compound", "", ""
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2014"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:15:33.457"
-			P: "Original|FileName", "KString", "", "", "C:\Users\jgyuan\Work\github\mypy\3dsmax\export\box_only.FBX"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:10:12.552"
+			P: "Original|FileName", "KString", "", "", "E:\Work\Github\mypy\3dsmax\export\plane_seg.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2014"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:15:33.457"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:10:12.552"
 		}
 	}
 }
@@ -60,7 +60,7 @@ GlobalSettings:  {
 		P: "UnitScaleFactor", "double", "Number", "",2
 		P: "OriginalUnitScaleFactor", "double", "Number", "",2
 		P: "AmbientColor", "ColorRGB", "Color", "",0,0,0
-		P: "DefaultCamera", "KString", "", "", "Producer Perspective"
+		P: "DefaultCamera", "KString", "", "", "Producer Front"
 		P: "TimeMode", "enum", "", "",6
 		P: "TimeProtocol", "enum", "", "",2
 		P: "SnapOnFrameMode", "enum", "", "",0
@@ -77,7 +77,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 993798672, "", "Scene" {
+	Document: 623205600, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -226,18 +226,18 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 566541280, "Geometry::", "Mesh" {
+	Geometry: 630096400, "Geometry::", "Mesh" {
 		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
+			P: "Color", "ColorRGB", "Color", "",0.341176470588235,0.882352941176471,0.341176470588235
 		}
-		Vertices: *24 {
-			a: -29.82763671875,-21.4958038330078,0,29.82763671875,-21.4958038330078,0,-29.82763671875,21.4958038330078,0,29.82763671875,21.4958038330078,0,-29.82763671875,-21.4958038330078,37.681957244873,29.82763671875,-21.4958038330078,37.681957244873,-29.82763671875,21.4958038330078,37.681957244873,29.82763671875,21.4958038330078,37.681957244873
+		Vertices: *30 {
+			a: -45,-20,0,-22.5,-20,0,0,-20,0,22.5,-20,0,45,-20,0,-45,20,0,-22.5,20,0,0,20,0,22.5,20,0,45,20,0
 		} 
-		PolygonVertexIndex: *36 {
-			a: 1,0,-4,0,2,-4,7,6,-5,7,4,-6,5,4,-1,5,0,-2,7,5,-2,7,1,-4,6,7,-4,6,3,-3,4,6,-3,4,2,-1
+		PolygonVertexIndex: *24 {
+			a: 5,0,-7,1,6,-1,6,1,-8,2,7,-2,7,2,-9,3,8,-3,8,3,-10,4,9,-4
 		} 
-		Edges: *18 {
-			a: 0,1,2,3,4,6,7,8,10,11,13,14,17,20,23,26,29,32
+		Edges: *17 {
+			a: 0,1,2,3,5,7,8,9,11,13,14,15,17,19,20,21,23
 		} 
 		GeometryVersion: 124
 		LayerElementNormal: 0 {
@@ -245,11 +245,36 @@ Objects:  {
 			Name: ""
 			MappingInformationType: "ByPolygonVertex"
 			ReferenceInformationType: "Direct"
-			Normals: *108 {
-				a: 0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0
+			Normals: *72 {
+				a: 0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1
 			} 
-			NormalsW: *36 {
-				a: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+			NormalsW: *24 {
+				a: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+			} 
+		}
+		LayerElementBinormal: 0 {
+			Version: 102
+			Name: "UVChannel_1"
+			MappingInformationType: "ByPolygonVertex"
+			ReferenceInformationType: "Direct"
+			Binormals: *72 {
+				a: 0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0
+			} 
+			BinormalsW: *24 {
+				a: 1,2,3,3,3,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,2,3
+			} 
+
+		}
+		LayerElementTangent: 0 {
+			Version: 102
+			Name: "UVChannel_1"
+			MappingInformationType: "ByPolygonVertex"
+			ReferenceInformationType: "Direct"
+			Tangents: *72 {
+				a: 1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,0,1,-0,-0,1,-0,0,1,-0,0
+			} 
+			TangentsW: *24 {
+				a: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 			} 
 		}
 		LayerElementUV: 0 {
@@ -257,11 +282,20 @@ Objects:  {
 			Name: "UVChannel_1"
 			MappingInformationType: "ByPolygonVertex"
 			ReferenceInformationType: "IndexToDirect"
-			UV: *48 {
-				a: 1,0,0,0,1,1,0,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1
+			UV: *34 {
+				a: 0,0,1,0,0,0,0.25,0,0.5,0,0.75,0,1,0,0,0,0.25,0,0.5,0,0.75,0,1,0,0,1,0.25,1,0.5,1,0.75,1,1,1
 			} 
-			UVIndex: *36 {
-				a: 1,0,3,0,2,3,7,6,4,7,4,5,11,10,8,11,8,9,15,14,12,15,12,13,19,18,16,19,16,17,23,22,20,23,20,21
+			UVIndex: *24 {
+				a: 12,7,13,8,13,7,13,8,14,9,14,8,14,9,15,10,15,9,15,10,16,11,16,10
+			} 
+		}
+		LayerElementVisibility: 0 {
+			Version: 101
+			Name: ""
+			MappingInformationType: "ByEdge"
+			ReferenceInformationType: "Direct"
+			Visibility: *17 {
+				a: 1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1
 			} 
 		}
 		Layer: 0 {
@@ -271,12 +305,24 @@ Objects:  {
 				TypedIndex: 0
 			}
 			LayerElement:  {
+				Type: "LayerElementBinormal"
+				TypedIndex: 0
+			}
+			LayerElement:  {
+				Type: "LayerElementTangent"
+				TypedIndex: 0
+			}
+			LayerElement:  {
+				Type: "LayerElementVisibility"
+				TypedIndex: 0
+			}
+			LayerElement:  {
 				Type: "LayerElementUV"
 				TypedIndex: 0
 			}
 		}
 	}
-	Model: 1065195296, "Model::Box001", "Mesh" {
+	Model: 1587968544, "Model::Plane001", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "PreRotation", "Vector3D", "Vector", "",-90,-0,0
@@ -284,19 +330,20 @@ Objects:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
-			P: "Lcl Translation", "Lcl Translation", "", "A",1.72946166992188,0,5.54209899902344
-			P: "MaxHandle", "int", "Integer", "UH",1
+			P: "Lcl Translation", "Lcl Translation", "", "A",1.35659027099609,27.9069766998291,1.219852720169e-006
+			P: "Lcl Rotation", "Lcl Rotation", "", "A",90.0000093346676,-0,0
+			P: "MaxHandle", "int", "Integer", "UH",2
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	AnimationStack: 1029506752, "AnimStack::Take 001", "" {
+	AnimationStack: 1152277856, "AnimStack::Take 001", "" {
 		Properties70:  {
 			P: "LocalStop", "KTime", "Time", "",153953860000
 			P: "ReferenceStop", "KTime", "Time", "",153953860000
 		}
 	}
-	AnimationLayer: 687802400, "AnimLayer::BaseLayer", "" {
+	AnimationLayer: 1054347104, "AnimLayer::BaseLayer", "" {
 	}
 }
 
@@ -305,14 +352,14 @@ Objects:  {
 
 Connections:  {
 	
-	;Model::Box001, Model::RootNode
-	C: "OO",1065195296,0
+	;Model::Plane001, Model::RootNode
+	C: "OO",1587968544,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
-	C: "OO",687802400,1029506752
+	C: "OO",1054347104,1152277856
 	
-	;Geometry::, Model::Box001
-	C: "OO",566541280,1065195296
+	;Geometry::, Model::Plane001
+	C: "OO",630096400,1587968544
 }
 ;Takes section
 ;----------------------------------------------------
