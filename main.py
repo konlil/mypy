@@ -13,6 +13,7 @@ import scene
 
 #d3d11.enableDebug()
 
+lightPos = (0,0,40)
 class Panel(object):
 	def __init__(self, device, window):
 		self.device = device
@@ -27,6 +28,8 @@ class Panel(object):
 		self.slider.addSelector()
 		self.slider.onSlide = self.onSlide
 
+		self.yaw = 0
+
 	def onMessage(self, msg):
 		return self.manager.onMessage(msg)
 
@@ -34,7 +37,12 @@ class Panel(object):
 		self.manager.render(frameTime)
 
 	def onSlide(self, event, selector):
+		global lightPos
+		rot = d3d11.Matrix()
+		rot.rotate((0, selector.position*2*3.1415926/100.0, 0))
+		lightPos = rot.transformVector(d3d11.Vector(0, 0, 40))
 		print("Slided: %i of %i" % (selector.position, selector.stop))
+		print lightPos
 
 class App(d3d11x.Frame):
 	def __init__(self, title, helpText=''):
@@ -57,6 +65,7 @@ class App(d3d11x.Frame):
 	def onRender(self):
 		viewMatrix = self.camera.getViewMatrix()
 		projMatrix = self.createProjection(65, 0.1, 2000)
+		self.scene.setLight(lightPos)
 		self.scene.render(self.device, viewMatrix, projMatrix)
 		self.panel.onRender(self.frameTime)
 

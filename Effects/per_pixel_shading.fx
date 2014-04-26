@@ -2,17 +2,18 @@
 //Constant buffer four our data.
 cbuffer defaultBuffer  
 {
+
     float4 ambientColor;
     float4 diffuseColor;
     float4 specularColor;
-
-    float3 cameraPos;
     float3 lightPos;
 
+    //camera position
+    float3 cameraPos;
     //inv World matrix
     float4x4 worldMatrix;
     //Combined world-, view- and projection-matrix.
-    float4x4 worldViewProjection;
+    float4x4 WVPMatrix;
 }
 
 // //Pre-object buffer
@@ -39,7 +40,7 @@ PS_INPUT VSSimple(VS_INPUT input)
 {
     PS_INPUT output;
 
-    output.pos = mul(input.pos, worldViewProjection);
+    output.pos = mul(input.pos, WVPMatrix);
     output.worldNormal = mul(input.normal, worldMatrix);
     float4 worldPos = mul(input.pos, worldMatrix);
     output.worldPos = worldPos/worldPos.w;

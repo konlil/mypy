@@ -18,6 +18,9 @@ class FbxScene(Scene):
 		super(FbxScene, self).__init__(path)
 		self.models = []
 
+	def setLight(self, light):
+		self.lightPos = light
+
 	def load(self):
 		lSdkManager, lScene = InitializeSdkObjects()
 		lResult = LoadScene(lSdkManager, lScene, self.res)
@@ -75,6 +78,7 @@ class FbxScene(Scene):
 
 	def render(self, device, view, proj):
 		for m in self.models:
+			m.setLight(self.lightPos)
 			m.render(device, view, proj)
 
 if __name__ == "__main__":
