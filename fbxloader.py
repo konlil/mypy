@@ -17,6 +17,11 @@ class MeshData(object):
 	def addMaterial(self, mat):
 		self.materialList.append(mat)
 
+	def __str__(self):
+		strVertex = [str(v) for v in self.vertexList]
+		strVertex = '\n'.join(strVertex)
+		return strVertex
+
 
 class MaterialData(object):
 	def __init__(self, name):
@@ -75,6 +80,10 @@ class VertexData(object):
 		self.uv = uv
 		self.normal = normal
 		self.tagent = tagent
+
+	def __str__(self):
+		return 'Vertex: pos%s, color%s, normal%s, tagent%s' \
+			%(str(self.position), str(self.color), str(self.normal), str(self.tagent))
 
 
 class FbxScene(object):
@@ -316,6 +325,8 @@ class FbxScene(object):
 			for triIdx in xrange(triangleCount):
 				triangle = meshData.triangleList[triIdx]
 				triangle.materialIndex = triangleMaterials[triIdx]
+
+		print meshData
 
 		return meshData
 
