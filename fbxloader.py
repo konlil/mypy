@@ -6,6 +6,7 @@ class MeshData(object):
 		self.name = name
 		self.vertexList = []
 		self.triangleList = []
+		self.materialList = []
 
 	def addVertex(self, v):
 		self.vertexList.append(v)
@@ -13,11 +14,14 @@ class MeshData(object):
 	def addTriangle(self, tri):
 		self.triangleList.append(tri)
 
+	def addMaterial(self, mat):
+		self.materialList.append(mat)
+
 
 class MaterialData(object):
 	def __init__(self, name):
 		self.name = name
-		pass
+		self.textures = None
 
 class TextureData(object):
 	def __init__(self):
@@ -137,42 +141,11 @@ class FbxScene(object):
 						triangleMaterials[triIdx] = materialIndex
 		return triangleMaterials
 
-	def DisplayTextureInfo(self, tex, blendMode):
-		# print "Name:", tex.GetName()
-		print "File Name", tex.GetRelativeFileName()
-		print "Scale U", tex.GetScaleU()
-		print "Scale V", tex.GetScaleV()
-		print "Translation U", tex.GetTranslationU()
-		print "Translation V", tex.GetTranslationV()
-		print "Swap UV", tex.GetSwapUV()
-		print "Rotation U", tex.GetRotationU()
-		print "Rotation V", tex.GetRotationV()
-		print "Rotation W", tex.GetRotationW()
-
-		lAlphaSources = [ "None", "RGB Intensity", "Black" ]
-		print "Alpha Source: ", lAlphaSources[tex.GetAlphaSource()]
-		print "Cropping Left: ", tex.GetCroppingLeft()
-		print "Cropping Top: ", tex.GetCroppingTop()
-		print "Cropping Right: ", tex.GetCroppingRight()
-		print "Cropping Bottom: ", tex.GetCroppingBottom()
-
-		lMappingTypes = [ "Null", "Planar", "Spherical", "Cylindrical", "Box", "Face", "UV", "Environment"]
-		print "Mapping Type: ", lMappingTypes[tex.GetMappingType()]
-
-		if tex.GetMappingType() == FbxTexture.ePlanar:
-			lPlanarMappingNormals = ["X", "Y", "Z" ]
-			print "Planar Mapping Normal: ", lPlanarMappingNormals[tex.GetPlanarMappingNormal()]
-
-		lBlendModes   = ["Translucent", "Add", "Modulate", "Modulate2"]
-		if blendMode >= 0:
-			print "Blend Mode: ", lBlendModes[blendMode]
-		print "Alpha: ", tex.GetDefaultAlpha()
-
-		lMaterialUses = ["Model Material", "Default Material"]
-		print "Material Use: ", lMaterialUses[tex.GetMaterialUse()]
-
-		texUses = ["Standard", "Shadow Map", "Light Map", "Spherical Reflexion Map", "Sphere Reflexion Map"]
-		print "Texture Use: ", texUses[tex.GetTextureUse()]
+	def loadTextureInfo(self, tex, blendMode):
+		texData = TextureData()
+		texData.name = tex.GetName()
+		texData.relativeFile = tex.GetRelativeFileName()
+		return texData
 
 	def loadMesh(self, node):
 		name = node.GetName()
@@ -308,6 +281,7 @@ class FbxScene(object):
 					raise NotImplementedError
 
 				#load Textures
+				materialData.textures = []
 				for lTextureIndex in xrange(FbxLayerElement.sTypeTextureCount()):
 					lProperty = lSurfMaterial.FindProperty(FbxLayerElement.sTextureChannelNames(lTextureIndex))
 					if lProperty.IsValid():
@@ -321,7 +295,8 @@ class FbxScene(object):
 									if lTexture:
 										print "Textures for ", lProperty.GetName().Buffer()
 										lBlendMode = lLayeredTexture.GetTextureBlendMode(k)
-										self.DisplayTextureInfo(lTexture, lBlendMode)
+										textureData = self.loadTextureInfo(lTexture, lBlendMode)
+										materialData.textures.append(textureData)
 						else:
 							# no layered texture simply get on the property
 							lNbTextures = lProperty.GetSrcObjectCount(FbxTexture.ClassId)
@@ -329,14 +304,11 @@ class FbxScene(object):
 								lTexture = lProperty.GetSrcObject(FbxTexture.ClassId,j)
 								if lTexture:
 									print "Textures", j, " for ", lProperty.GetName().Buffer()
-									self.DisplayTextureInfo(lTexture, -1)
-							# texCount = lProperty.GetSrcObjectCount(FbxTexture.ClassId)
-							# for texIdx in xrange(texCount):
-							# 	lTexture = lProperty.GetSrcObject(FbxTexture.ClassId,j)
-							# 	if lTexture:
-							# 		print "Textures for ", lProperty.GetName().Buffer()
-							# 		self.DisplayTextureInfo(lTexture, -1)
-					# print 
+									textureData = self.loadTextureInfo(lTexture, -1)
+									materialData.textures.append(textureData)
+
+				#add to mesh
+				meshData.addMaterial(materialData)
 
 		#connect material
 		triangleMaterials = self.loadTriangleMaterials(mesh, triangleCount)
