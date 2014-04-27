@@ -1,4 +1,4 @@
-'''
+ '''
 mypy test framework
 '''
 import math
@@ -51,7 +51,7 @@ class App(d3d11x.Frame):
 	def onCreate(self):
 		self.camera = d3d11x.Camera()
 		self.panel = Panel(self.device, self.window)
-		self.scene = scene.FbxScene('assets/box_only.fbx')
+		self.scene = scene.FbxScene('assets/box_diffuse.fbx')
 		self.scene.load()
 
 	def onUpdate(self):

@@ -90,6 +90,99 @@ class FbxModel(Model):
 		z = controlPoints[polygonIdx][2]
 		return (x, y, z)
 
+	def DisplayTextureInfo(self, tex, blendMode):
+		print "Name:", tex.GetName()
+		print "File Name", tex.GetRelativeFileName()
+		print "Scale U", tex.GetScaleU()
+		print "Scale V", tex.GetScaleV()
+		print "Translation U", tex.GetTranslationU()
+		print "Translation V", tex.GetTranslationV()
+		print "Swap UV", tex.GetSwapUV()
+		print "Rotation U", tex.GetRotationU()
+		print "Rotation V", tex.GetRotationV()
+		print "Rotation W", tex.GetRotationW()
+
+		lAlphaSources = [ "None", "RGB Intensity", "Black" ]
+		print "Alpha Source: ", lAlphaSources[tex.GetAlphaSource()]
+		print "Cropping Left: ", tex.GetCroppingLeft()
+		print "Cropping Top: ", tex.GetCroppingTop()
+		print "Cropping Right: ", tex.GetCroppingRight()
+		print "Cropping Bottom: ", tex.GetCroppingBottom()
+
+		lMappingTypes = [ "Null", "Planar", "Spherical", "Cylindrical", "Box", "Face", "UV", "Environment"]
+		print "Mapping Type: ", lMappingTypes[tex.GetMappingType()]
+
+		if tex.GetMappingType() == FbxTexture.ePlanar:
+			lPlanarMappingNormals = ["X", "Y", "Z" ]
+			print "Planar Mapping Normal: ", lPlanarMappingNormals[tex.GetPlanarMappingNormal()]
+
+		lBlendModes   = ["Translucent", "Add", "Modulate", "Modulate2"]
+		if blendMode >= 0:
+			print "Blend Mode: ", lBlendModes[blendMode]
+		print "Alpha: ", tex.GetDefaultAlpha()
+
+		lMaterialUses = ["Model Material", "Default Material"]
+		print "Material Use: ", lMaterialUses[tex.GetMaterialUse()]
+
+		texUses = ["Standard", "Shadow Map", "Light Map", "Spherical Reflexion Map", "Sphere Reflexion Map"]
+		print "Texture Use: ", texUses[tex.GetTextureUse()]
+
+	def FindAndDisplayTextureInfoByProperty(self, pProperty, pDisplayHeader, pMaterialIndex):
+		if pProperty.IsValid():
+			#Here we have to check if it's layeredtextures, or just textures:
+			lLayeredTextureCount = pProperty.GetSrcObjectCount(FbxLayeredTexture.ClassId)
+			if lLayeredTextureCount > 0:
+				for j in range(lLayeredTextureCount):
+					print "Layered Texture: ", j
+					lLayeredTexture = pProperty.GetSrcObject(FbxLayeredTexture.ClassId, j)
+					lNbTextures = lLayeredTexture.GetSrcObjectCount(FbxTexture.ClassId)
+					for k in range(lNbTextures):
+						lTexture = lLayeredTexture.GetSrcObject(FbxTexture.ClassId,k)
+						if lTexture:
+							if pDisplayHeader:
+								print "Textures connected to Material ", pMaterialIndex
+								pDisplayHeader = False
+
+							# NOTE the blend mode is ALWAYS on the LayeredTexture and NOT the one on the texture.
+							# Why is that?  because one texture can be shared on different layered textures and might
+							# have different blend modes.
+
+							lBlendMode = lLayeredTexture.GetTextureBlendMode(k)
+							print "Textures for:", pProperty.GetName()
+							print "Texture ", k
+							self.DisplayTextureInfo(lTexture, lBlendMode)
+			else:
+				# no layered texture simply get on the property
+				lNbTextures = pProperty.GetSrcObjectCount(FbxTexture.ClassId)
+				print lNbTextures
+				for j in range(lNbTextures):
+					lTexture = pProperty.GetSrcObject(FbxTexture.ClassId,j)
+					if lTexture:
+						# display connectMareial header only at the first time
+						if pDisplayHeader:
+							print "Textures connected to Material ", pMaterialIndex
+							pDisplayHeader = False
+
+						print "Textures for ", pProperty.GetName().Buffer()
+						print "Texture ", j
+						self.DisplayTextureInfo(lTexture, -1)
+
+				lNbTex = pProperty.GetSrcObjectCount(FbxTexture.ClassId)
+				for lTextureIndex in range(lNbTex):
+					lTexture = pProperty.GetSrcObject(FbxTexture.ClassId, lTextureIndex)
+
+	def readTextures(self, mesh):
+		lNbMat = mesh.GetNode().GetSrcObjectCount(FbxSurfaceMaterial.ClassId)
+		for lMaterialIndex in range(lNbMat):
+			lMaterial = mesh.GetNode().GetSrcObject(FbxSurfaceMaterial.ClassId, lMaterialIndex)
+			lDisplayHeader = True
+
+			#go through all the possible textures
+			if lMaterial:
+				for lTextureIndex in range(FbxLayerElement.sTypeTextureCount()):
+					lProperty = lMaterial.FindProperty(FbxLayerElement.sTextureChannelNames(lTextureIndex))
+					self.FindAndDisplayTextureInfoByProperty(lProperty, lDisplayHeader, lMaterialIndex)
+
 	def fromFbxNode(self, node):
 		lMesh = node.GetNodeAttribute()
 		print "load:", node.GetName()
@@ -100,10 +193,7 @@ class FbxModel(Model):
 		indexData = lMesh.GetPolygonVertices()
 		leNormals = lMesh.GetLayer(0).GetNormals()
 
-		print controlPointsCount, indexCount
-		for i in xrange(controlPointsCount):
-			print controlPoints[i]
-		print '--------------------------'
+		self.readTextures(lMesh)
 
 		print len(indexData), indexData
 		self.vertexData = []

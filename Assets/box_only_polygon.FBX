@@ -11,10 +11,10 @@ FBXHeaderExtension:  {
 		Year: 2014
 		Month: 4
 		Day: 26
-		Hour: 18
-		Minute: 15
-		Second: 33
-		Millisecond: 461
+		Hour: 20
+		Minute: 23
+		Second: 49
+		Millisecond: 133
 	}
 	Creator: "FBX SDK/FBX Plugins version 2014.0.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2014"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:15:33.457"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "26/04/2014 12:23:49.131"
 			P: "Original|FileName", "KString", "", "", "C:\Users\jgyuan\Work\github\mypy\3dsmax\export\box_only.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2014"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "26/04/2014 10:15:33.457"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "26/04/2014 12:23:49.131"
 		}
 	}
 }
@@ -226,7 +226,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 566541280, "Geometry::", "Mesh" {
+	Geometry: 566541968, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
 		}
@@ -276,7 +276,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 1065195296, "Model::Box001", "Mesh" {
+	Model: 1065176736, "Model::Box001", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "PreRotation", "Vector3D", "Vector", "",-90,-0,0
@@ -306,13 +306,13 @@ Objects:  {
 Connections:  {
 	
 	;Model::Box001, Model::RootNode
-	C: "OO",1065195296,0
+	C: "OO",1065176736,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
 	C: "OO",687802400,1029506752
 	
 	;Geometry::, Model::Box001
-	C: "OO",566541280,1065195296
+	C: "OO",566541968,1065176736
 }
 ;Takes section
 ;----------------------------------------------------
