@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{630df12a-8069-455e-8e31-9d0294a2c8cd}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>main.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Compile Include="asset_manager.py" />
+    <Compile Include="cdata.py" />
+    <Compile Include="context.py" />
+    <Compile Include="effect_material.py" />
+    <Compile Include="error.py" />
+    <Compile Include="fbxloader.py" />
+    <Compile Include="main.py" />
+    <Compile Include="mesh_builder.py" />
+    <Compile Include="model.py" />
+    <Compile Include="primitive.py" />
+    <Compile Include="scene.py" />
+    <Compile Include="scene_desc.py" />
+    <Compile Include="Tutorial2.py" />
+    <Compile Include="vertices.py" />
+    <Compile Include="visual.py" />
+    <Content Include="Assets\box_diffuse.desc" />
+    <Content Include="Assets\box_diffuse.FBX" />
+    <Content Include="Assets\box_only.desc" />
+    <Content Include="Assets\box_only.FBX" />
+    <Content Include="Assets\box_only_2013.FBX" />
+    <Content Include="Assets\box_only_2014.FBX" />
+    <Content Include="Assets\box_only_polygon.FBX" />
+    <Content Include="Assets\box_unit.desc" />
+    <Content Include="Assets\box_unit.FBX" />
+    <Content Include="Assets\many_box.fbx" />
+    <Content Include="Assets\plane_seg.desc" />
+    <Content Include="Assets\plane_seg.FBX" />
+    <Content Include="Assets\teapot_from_max9.FBX" />
+    <Content Include="Assets\teapot_only.fbx" />
+    <Content Include="Assets\test_scene.fbx" />
+    <Content Include="Effects\ambient_only.fx" />
+    <Content Include="Effects\d3d11x-HeightMap.fx" />
+    <Content Include="Effects\d3d11x-Mesh.fx" />
+    <Content Include="Effects\d3d11x-SkyBox.fx" />
+    <Content Include="Effects\d3d11x-Sprite.fx" />
+    <Content Include="Effects\diffuse_reflection.fx" />
+    <Content Include="Effects\marker.fx" />
+    <Content Include="Effects\mirror_reflection.fx" />
+    <Content Include="Effects\normal_map.fx" />
+    <Content Include="Effects\per_pixel_shading.fx" />
+    <Content Include="Effects\per_vertex_shading.fx" />
+    <Content Include="Effects\simple.fx" />
+    <Content Include="Effects\Tutorial2.fx" />
+    <Content Include="Textures\gui-check.png" />
+    <Content Include="Textures\gui-down.png" />
+    <Content Include="Textures\gui-max.png" />
+    <Content Include="Textures\gui-min.png" />
+    <Content Include="Textures\gui-radio.png" />
+    <Content Include="Textures\gui-slider.png" />
+    <Content Include="Textures\gui-up.png" />
+    <Content Include="Textures\gui-x.png" />
+    <Content Include="Textures\stone_wall.bmp" />
+    <Content Include="Textures\stone_wall_normal_map.bmp" />
+    <Content Include="Textures\x.ico" />
+    <Content Include="3dsmax\sceneassets\images\JP_Brick01_Bump.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="3dsmax\" />
+    <Folder Include="3dsmax\sceneassets\" />
+    <Folder Include="3dsmax\sceneassets\images" />
+    <Folder Include="Assets\" />
+    <Folder Include="Effects\" />
+    <Folder Include="Textures" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>

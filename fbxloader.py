@@ -82,11 +82,11 @@ class VertexData(object):
 		self.tagent = tagent
 
 	def __str__(self):
-		return 'Vertex: pos%s, color%s, normal%s, tagent%s' \
+		return 'pos:%s\tcolor:%s\tnormal:%s\ttagent:%s' \
 			%(str(self.position), str(self.color), str(self.normal), str(self.tagent))
 
 
-class FbxScene(object):
+class FbxSceneLoader(object):
 	def __init__(self, path):
 		self.path = path
 		self.meshes = {}
@@ -163,6 +163,7 @@ class FbxScene(object):
 		controlPoints = mesh.GetControlPoints()
 		triangleCount = mesh.GetPolygonCount()
 		vertexCounter=0
+
 		for i in xrange(triangleCount):
 			triangleData = TriangleData()
 			for j in xrange(3):
@@ -258,6 +259,8 @@ class FbxScene(object):
 				vertexData.tagent = tagent
 				#print 'tagent', tagent
 
+				#print vertexData
+
 				triangleData.addVertex(vertexData)
 				meshData.addVertex(vertexData)
 
@@ -326,11 +329,14 @@ class FbxScene(object):
 				triangle = meshData.triangleList[triIdx]
 				triangle.materialIndex = triangleMaterials[triIdx]
 
-		print meshData
+		#print meshData
 
 		return meshData
 
 
 if __name__ == "__main__":
-	loader = FbxScene('assets/box_diffuse.fbx')
+	#loader = FbxSceneLoader('assets/box_only_2013.fbx')
+	#print '-------------------------------------------'
+	#loader = FbxSceneLoader('assets/box_only_2014.fbx')
+	FbxSceneLoader('assets/box_unit.fbx')
 

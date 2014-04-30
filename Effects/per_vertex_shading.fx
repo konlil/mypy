@@ -43,6 +43,7 @@ PS_INPUT VSSimple(VS_INPUT input)
 {
     PS_INPUT output;
 
+	const float attenuation = 0.005f;
     //Transform our world-space vertex into screen space.
     output.pos = mul(input.pos, WVPMatrix);
 
@@ -50,8 +51,11 @@ PS_INPUT VSSimple(VS_INPUT input)
     float4 worldPos = mul(input.pos, worldMatrix);
     worldPos = worldPos/worldPos.w;
 
-    float3 directionToLight = normalize(lightPos.xyz - worldPos.xyz);
-    float diffuseIntensity = saturate( dot(directionToLight, worldNormal.xyz) );
+	float3 toLight = lightPos.xyz - worldPos.xyz;
+    float3 directionToLight = normalize(toLight);
+	float lightDist = length(toLight);
+	float fAtten = 1.0 / dot(attenuation, float4(1, lightDist, lightDist * lightDist, 0));
+    float diffuseIntensity = saturate( dot(worldNormal.xyz, directionToLight) * fAtten );
     float4 diffuse = diffuseColor * diffuseIntensity;
 
     float3 reflectionVector = normalize( reflect(-directionToLight, worldNormal.xyz) );
@@ -59,6 +63,7 @@ PS_INPUT VSSimple(VS_INPUT input)
     float4 specular = specularColor * pow(saturate(dot(reflectionVector, directionToCamera)), 20);
 
     output.color = specular + diffuse + ambientColor;
+	//output.color = diffuse;
     output.color.a = 1.0;
     return output;    
 }
