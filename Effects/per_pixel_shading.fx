@@ -7,6 +7,7 @@ cbuffer defaultBuffer
     float4 diffuseColor;
     float4 specularColor;
     float3 lightPos;
+    float3 lightDir;
 
     //camera position
     float3 cameraPos;
@@ -41,7 +42,7 @@ PS_INPUT VSSimple(VS_INPUT input)
     PS_INPUT output;
 
     output.pos = mul(input.pos, WVPMatrix);
-    output.worldNormal = mul(input.normal, worldMatrix);
+    output.worldNormal = normalize( mul(input.normal, worldMatrix) );
     float4 worldPos = mul(input.pos, worldMatrix);
     output.worldPos = worldPos/worldPos.w;
     return output;
@@ -51,8 +52,9 @@ PS_INPUT VSSimple(VS_INPUT input)
 //means the color will go to the render target at index 0.
 float4 PSSimple(PS_INPUT input) : SV_Target
 {
-    float3 directionToLight = normalize(lightPos.xyz - input.worldPos.xyz);
-    float diffuseIntensity = saturate( dot(directionToLight, input.worldNormal.xyz) );
+    //float3 directionToLight = normalize(lightPos.xyz - input.worldPos.xyz);
+    float3 directionToLight = normalize(float3(1, 0, 0));
+    float diffuseIntensity =  dot(directionToLight, input.worldNormal.xyz);
     float4 diffuse = diffuseColor * diffuseIntensity;
 
     float3 reflectionVector = normalize( reflect(-directionToLight, input.worldNormal.xyz) );

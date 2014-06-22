@@ -215,7 +215,7 @@ class FbxModel(Model):
 				elif v[0] == 'COLOR':
 					vertexDef += list(color)
 			self.vertexData.append(vertexDef)
-			print index, vertexDef
+			print index, normal
 		self.indexData = [(int(i),) for i in indexData]
 		self.indexCount = indexCount
 
@@ -259,8 +259,9 @@ class FbxModel(Model):
 			var = getattr(self.desc, var_key, None)
 			if var:
 				self.effect.set(var_key, var)
-
-		self.effect.set("lightPos", (self.lightPos[0],self.lightPos[1], self.lightPos[2], 0))
+	
+		if "lightPos" in effectVarsDesc:
+			self.effect.set("lightPos", (self.lightPos[0],self.lightPos[1], self.lightPos[2], 0))
 		# self.effect.set("vEye", d3d11x.Camera().pos)
 		# self.effect.set("vLightDirection", [1, 0, 0, 1.0])
 		# # self.effect.set("lightPos", [1, 4, 1.5, 0])

@@ -58,11 +58,12 @@ class App(d3d11x.Frame):
 		self.camera = d3d11x.Camera()
 
 		self.cubeMarker = marker.CubeMarker()
+		self.cubeMarker.position = d3d11.Vector(40, 40, 40)
 		marker.mgr.addMarker(self.cubeMarker)
 
 		self.panel = Panel(self.device, self.window)
-		#self.scene = scene.FbxScene('assets/box_only.fbx')
-		#self.scene.load()
+		self.scene = scene.FbxScene('assets/box_only.fbx')
+		self.scene.load()
 
 	def onUpdate(self):
 		self.camera.onUpdate(self.frameTime)
@@ -76,8 +77,8 @@ class App(d3d11x.Frame):
 	def onRender(self):
 		viewMatrix = self.camera.getViewMatrix()
 		projMatrix = self.createProjection(65, 0.1, 2000)
-		#self.scene.setLight(lightPos)
-		#self.scene.render(self.device, viewMatrix, projMatrix)
+		self.scene.setLight(lightPos)
+		self.scene.render(self.device, viewMatrix, projMatrix)
 		marker.mgr.render(self.device, viewMatrix, projMatrix)
 		self.panel.onRender(self.frameTime)
 
