@@ -1,8 +1,7 @@
-#coding:gbk
+#coding: gbk
 import d3d11
 import d3d11x
 from d3d11c import *
-import mesh_builder
 
 g_vertexDesc = [
     ("POSITION", 0, FORMAT_R32G32B32_FLOAT, 0, 0, INPUT_PER_VERTEX_DATA, 0),
@@ -11,24 +10,7 @@ g_vertexDesc = [
 g_indexLayoutDesc16 = [("", 0, FORMAT_R16_UINT, 0, 0, INPUT_PER_VERTEX_DATA, 0)]
 g_indexLayoutDesc32 = [("", 0, FORMAT_R32_UINT, 0, 0, INPUT_PER_VERTEX_DATA, 0)]
 
-class MarkerManager(object):
-	def __init__(self):
-		self.marker_list = set()
-
-	def addMarker(self, m):
-		self.marker_list.add(m)
-
-	def update(self):
-		for m in self.marker_list:
-			m.update()
-
-	def render(self, device, view, proj):
-		for m in self.marker_list:
-			m.render(device, view, proj) 
-	
-mgr = MarkerManager()
-
-class Marker(object):
+class GridPlane(object):
 	def __init__(self, effect=None):
 		self.effecName = effect
 		self.vertexBuffer = None
@@ -39,6 +21,12 @@ class Marker(object):
 		self.pitch= 0
 		self.roll = 0
 		self.scale = (1, 1, 1)
+
+		self.width = 100
+		self.height = 100
+		self.gridsize = 10.0
+		self.gridx = int(self.width/self.gridsize)
+		self.gridy = int(self.height/self.gridsize)
 
 		self.rotationMatrix = d3d11.Matrix()
 		self.translationMatrix = d3d11.Matrix()
@@ -56,6 +44,40 @@ class Marker(object):
 		#the pass's input signature is compatible with that combination.
 		self.inputLayout = d3d11.InputLayout(g_vertexDesc, self.effect, 0, 0)
 
+		vertexData = []
+		for i in xrange(self.gridx+1):
+			if i%2 == 0:
+				vertexData.append( (0, 0, i*self.gridsize, 1, 1, 1, 1) )
+				vertexData.append( (self.width, 0, i*self.gridsize, 1, 1, 1, 1) )
+			else:
+				vertexData.append( (self.width, 0, i*self.gridsize, 1, 1, 1, 1) )
+				vertexData.append( (0, 0, i*self.gridsize, 1, 1, 1, 1) )
+
+		for i in xrange(self.gridy+1):
+			if self.height%2 == 0:
+				if i%2 == 0:
+					vertexData.append( (i*self.gridsize, 0, self.height, 1, 1, 1, 1) )
+					vertexData.append( (i*self.gridsize, 0, 0, 1, 1, 1, 1) )
+				else:
+					vertexData.append( (i*self.gridsize, 0, 0, 1, 1, 1, 1) )
+					vertexData.append( (i*self.gridsize, 0, self.height, 1, 1, 1, 1) )
+			else:
+				if i%2 == 0:
+					vertexData.append( ( (self.width-i)*self.gridsize, 0, self.height, 1, 1, 1, 1) )
+					vertexData.append( ( (self.width-i)*self.gridsize, 0, 0, 1, 1, 1, 1) )
+				else:
+					vertexData.append( ( (self.width-i)*self.gridsize, 0, 0, 1, 1, 1, 1) )
+					vertexData.append( ( (self.width-i)*self.gridsize, 0, self.height, 1, 1, 1, 1) )
+
+		self.vertexBuffer = d3d11.Buffer(
+				g_vertexDesc,
+				vertexData,				# D3D11_SUBRESOURCE_DATA
+				BIND_VERTEX_BUFFER,		# D3D11_BUFFER_DESC.BinadFlags
+				USAGE_DYNAMIC,			# D3D11_BUFFER_DESC.Usage
+				CPU_ACCESS_WRITE,		# D3D11_BUFFER_DESC.CPUAccessFlags
+		)
+
+
 	def update(self):
 		self.rotationMatrix.rotate((self.pitch, self.yaw, self.roll))
 		self.translationMatrix.translate(self.position)
@@ -68,9 +90,9 @@ class Marker(object):
 
 		#Set vertex buffer, input layout and topology.
 		device.setVertexBuffers([self.vertexBuffer])
-		device.setIndexBuffer(self.indexBuffer)
+		#device.setIndexBuffer(self.indexBuffer)
 		device.setInputLayout(self.inputLayout)
-		device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+		device.setPrimitiveTopology(PRIMITIVE_TOPOLOGY_LINELIST)
 
 		#The world matrix. Rotate the triangle (in radians) based
 		#on the value returned by clock().
@@ -99,45 +121,27 @@ class Marker(object):
 		else:
 			device.drawIndexed(len(self.indexBuffer), 0, 0)
 
+class PlaneManager(object):
+	def __init__(self):
+		self.planes = {}
 
-class CubeMarker(Marker):
-	def build(self):
-		super(CubeMarker, self).build()
-		vertex_list, index_list = mesh_builder.build_cube(1.0)
-		vertexData = []
-		for v in vertex_list:
-			vertexData.append((v[0], v[1], v[2], 1, 1, 1, 1))
+	def addPlane( self, plane, coord ):
+		plane.position = d3d11.Vector( coord[0]*plane.width, 0, coord[1]*plane.height )
+		self.planes[coord] = plane
 
-		indexData = [(int(i),) for i in index_list]
-		self.indexBuffer = d3d11.Buffer(g_indexLayoutDesc32, indexData, BIND_INDEX_BUFFER, USAGE_IMMUTABLE)
-		self.vertexBuffer = d3d11.Buffer(
-				g_vertexDesc,
-				vertexData,				# D3D11_SUBRESOURCE_DATA
-				BIND_VERTEX_BUFFER,		# D3D11_BUFFER_DESC.BinadFlags
-				USAGE_DYNAMIC,			# D3D11_BUFFER_DESC.Usage
-				CPU_ACCESS_WRITE,		# D3D11_BUFFER_DESC.CPUAccessFlags
-		)
+	def update(self):
+		for p in self.planes.values():
+			p.update()
 
-		print len(self.indexBuffer)
+	def render(self, device, view, proj):
+		for p in self.planes.values():
+			p.render(device, view, proj) 
+	
+mgr = PlaneManager()
 
-
-class LevelPlane(Marker):
-	def build(self):
-		super(LevelPlane, self).build()
-		vertex_list, index_list = mesh_builder.build_plane(1.0)
-		vertexData = []
-		for v in vertex_list:
-			vertexData.append((v[0], v[1], v[2], 1, 1, 1, 1))
-
-		indexData = [(int(i),) for i in index_list]
-
-		self.indexBuffer = d3d11.Buffer(g_indexLayoutDesc32, indexData, BIND_INDEX_BUFFER, USAGE_IMMUTABLE)
-		self.vertexBuffer = d3d11.Buffer(
-				g_vertexDesc,
-				vertexData,				# D3D11_SUBRESOURCE_DATA
-				BIND_VERTEX_BUFFER,		# D3D11_BUFFER_DESC.BinadFlags
-				USAGE_DYNAMIC,			# D3D11_BUFFER_DESC.Usage
-				CPU_ACCESS_WRITE,		# D3D11_BUFFER_DESC.CPUAccessFlags
-		)
-
-		print len(self.indexBuffer)
+def createPlanes():
+	global mgr
+	mgr.addPlane( GridPlane(), (0, 0) )
+	mgr.addPlane( GridPlane(), (-1, 0) )
+	mgr.addPlane( GridPlane(), (-1, -1) )
+	mgr.addPlane( GridPlane(), (0, -1) )

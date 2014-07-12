@@ -27,6 +27,3 @@ def build_cube(size):
 	index_list = [ 0,1,2,2,1,3,4,0,6,6,0,2,7,5,6,6,5,4,3,1,7,7,1,5,4,5,0,0,5,1,3,7,2,2,7,6 ]
 
 	return vertex_list, index_list
-
-
-

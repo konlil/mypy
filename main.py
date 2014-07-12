@@ -11,6 +11,7 @@ from d3d11c import *
 import d3d11gui as gui
 import scene
 import marker
+import gridplane
 
 #d3d11.enableDebug()
 
@@ -61,6 +62,8 @@ class App(d3d11x.Frame):
 		self.cubeMarker.position = d3d11.Vector(40, 40, 40)
 		marker.mgr.addMarker(self.cubeMarker)
 
+		gridplane.createPlanes()
+
 		self.panel = Panel(self.device, self.window)
 		self.scene = scene.FbxScene('assets/box_only.fbx')
 		self.scene.load()
@@ -68,6 +71,7 @@ class App(d3d11x.Frame):
 	def onUpdate(self):
 		self.camera.onUpdate(self.frameTime)
 		marker.mgr.update()
+		gridplane.mgr.update()
 
 	def onMessage(self, event):
 		if self.panel.onMessage(event):
@@ -80,6 +84,7 @@ class App(d3d11x.Frame):
 		self.scene.setLight(lightPos)
 		self.scene.render(self.device, viewMatrix, projMatrix)
 		marker.mgr.render(self.device, viewMatrix, projMatrix)
+		gridplane.mgr.render(self.device, viewMatrix, projMatrix)
 		self.panel.onRender(self.frameTime)
 
 if __name__ == "__main__":
